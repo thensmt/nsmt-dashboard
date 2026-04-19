@@ -1,0 +1,43 @@
+name: fetch-projects
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-projects
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Fetch projects
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_DASHBOARD }}
+        run: npm run fetch-data
+
+      - name: Commit if changed
+        run: |
+          git config user.name "nsmt-bot"
+          git config user.email "bot@nsmtsports.com"
+          if git diff --quiet public/data.json; then
+            echo "no changes"
+            exit 0
+          fi
+          git add public/data.json
+          git commit -m "chore: refresh public/data.json [skip ci]"
+          git push
