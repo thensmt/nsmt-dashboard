@@ -27,7 +27,7 @@ jobs:
 
       - name: Fetch projects
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_DASHBOARD }}
+          GITHUB_TOKEN: ${{ secrets.DASHBOARD_PAT }}
         run: npm run fetch-data
 
       - name: Commit if changed

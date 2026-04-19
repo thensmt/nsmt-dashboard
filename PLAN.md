@@ -83,7 +83,7 @@ David needs a personal projects dashboard to track all his NSMT (Nova Sports Med
 - **GitHub owner:** `thensmt` — **User account** (confirmed by user). Use `octokit.repos.listForUser({ username: 'thensmt' })`. No runtime account-type detection needed.
 - **`public/data.json` updates:** GitHub Actions hourly cron (user-confirmed). Add `.github/workflows/fetch-projects.yml` in the scaffold.
 - **Ghost-card persistence:** localStorage drafts + one-click export to `projects-overrides.json` (user-confirmed). Committed file is the durable cross-device path.
-- **Token scope:** Fine-grained PAT scoped to `thensmt/*`, read-only (Contents: Read, Metadata: Read). Used by both the app (`.env.local`) and the Actions cron (`secrets.GITHUB_TOKEN_DASHBOARD`).
+- **Token scope:** Fine-grained PAT scoped to `thensmt/*`, read-only (Contents: Read, Metadata: Read). Used by both the app (`.env.local`) and the Actions cron (`secrets.DASHBOARD_PAT`).
 - **Hosting:** Vercel (user-confirmed). Read-only FS is fine since route handler never writes at runtime.
 
 **Design bundle source:** `/tmp/design-peppy-moth/david-dashboard/`
@@ -215,7 +215,7 @@ bunx create-next-app@16 . --ts --tailwind --app --src-dir --import-alias "@/*"
   - Schedule: `cron: '17 * * * *'` (hourly, offset from top-of-hour)
   - Calls the same `fetchProjects()` via a `scripts/fetch-data.ts` runner (Node, not Next.js)
   - Commits `public/data.json` to `main` only if changed (no-op commits avoided via `git diff --quiet`)
-  - Uses `secrets.GITHUB_TOKEN_DASHBOARD` (fine-grained PAT, Contents+Metadata read on `thensmt/*`)
+  - Uses `secrets.DASHBOARD_PAT` (fine-grained PAT, Contents+Metadata read on `thensmt/*`)
 
 - **`page.tsx`** fetches from `/api/projects` (server-to-server). ISR `export const revalidate = 3600`.
 
