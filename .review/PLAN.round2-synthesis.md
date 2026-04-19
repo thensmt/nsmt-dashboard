@@ -76,21 +76,18 @@ David needs a personal projects dashboard to track all his NSMT (Nova Sports Med
 - Presentation mode one-click strips dev-centric data for screen-sharing with partners
 - Absolute `#000000` dark mode and two layout variations (Broadcast bar + Editorial hero) with a persisted toggle
 
-**Decisions carried forward from user (all six deferred items now answered, 2026-04-19):**
+**Decisions carried forward from user:**
 - **Target (1a):** New standalone Next.js 16 app at `~/NSMT/nsmt-dashboard`
 - **Data source (2b):** Live GitHub API, hourly ISR cache + manual Refresh button for force-refresh (C2)
 - **Layout (3a):** Both variations on desktop with persisted toggle; mobile shows Variation A only (matches prototype)
-- **GitHub owner:** `thensmt` — **User account** (confirmed by user). Use `octokit.repos.listForUser({ username: 'thensmt' })`. No runtime account-type detection needed.
-- **`public/data.json` updates:** GitHub Actions hourly cron (user-confirmed). Add `.github/workflows/fetch-projects.yml` in the scaffold.
-- **Ghost-card persistence:** localStorage drafts + one-click export to `projects-overrides.json` (user-confirmed). Committed file is the durable cross-device path.
-- **Token scope:** Fine-grained PAT scoped to `thensmt/*`, read-only (Contents: Read, Metadata: Read). Used by both the app (`.env.local`) and the Actions cron (`secrets.GITHUB_TOKEN_DASHBOARD`).
-- **Hosting:** Vercel (user-confirmed). Read-only FS is fine since route handler never writes at runtime.
 
 **Design bundle source:** `/tmp/design-peppy-moth/david-dashboard/`
 - `README.md`
 - `chats/chat1.md` (intent — read this for design rationale)
 - `project/David Dashboard.html` (80,395 bytes, 1,647 lines)
 - `project/assets/wordmark-*.png`, `secondary-blue.png`
+
+**GitHub owner:** slug = `thensmt` (confirmed from seed data). Account type (User vs Organization) is unverified at planning time — must be detected at runtime via `GET /users/thensmt` or confirmed by user before implementation (see Deferred Decision #5).
 
 ---
 
@@ -149,7 +146,8 @@ bunx create-next-app@16 . --ts --tailwind --app --src-dir --import-alias "@/*"
 │   ├── hooks/
 │   │   └── usePersistedState.ts
 │   ├── lib/
-│   │   ├── github.ts               ← Octokit fetcher (server only, uses listForUser)
+│   │   ├── github.ts               ← Octokit fetcher (server only)
+│   │   ├── githubOwner.ts          ← runtime account-type detection (D5/C4)
 │   │   ├── projects.ts             ← PROJECT_META map, seeded from prototype
 │   │   ├── overrides.ts            ← localStorage drafts + export-to-JSON (D6)
 │   │   ├── drift.ts                ← >60-day stale check, default branch only (D8)
@@ -157,12 +155,7 @@ bunx create-next-app@16 . --ts --tailwind --app --src-dir --import-alias "@/*"
 │   │   ├── schema.ts               ← zod schemas for GitHub responses (F4)
 │   │   └── utils.ts                ← cn() helper
 │   └── types.ts                    ← Project, RepoMeta, Status, Type
-├── .env.local                      ← GITHUB_TOKEN (fine-grained PAT, thensmt/* read)
-├── .github/
-│   └── workflows/
-│       └── fetch-projects.yml      ← hourly cron, updates public/data.json
-├── scripts/
-│   └── fetch-data.ts               ← runnable by cron AND `bun run fetch-data`
+├── .env.local                      ← GITHUB_TOKEN
 ├── components.json                 ← shadcn config
 ├── next.config.ts
 ├── package.json
@@ -193,8 +186,14 @@ bunx create-next-app@16 . --ts --tailwind --app --src-dir --import-alias "@/*"
 
 - **`projects.ts`** exports `PROJECT_META` map keyed by repo slug. Seed from prototype's `PROJECTS` array at **line 1153** (D4 corrected from ~1140). Fields: `{ type, status, desc, next, stack, live, path }`.
 
+- **`githubOwner.ts`** (D5/C4):
+  - At module load (once per server start), `GET /users/thensmt` via Octokit.
+  - Cache `{ login, type: 'User' | 'Organization' }` for the process lifetime.
+  - Export `listForOwner(octokit, opts)` that dispatches to `listForUser` or `listForOrg` based on cached type.
+  - If initial detection fails (e.g., rate limit), fall back to `listForUser` with a console warning and reattempt on next request.
+
 - **`github.ts`** exports `async function fetchProjects()`:
-  1. `octokit.paginate(octokit.repos.listForUser, { username: 'thensmt', per_page: 100 })` (user confirmed account type, F7 pagination). `githubOwner.ts` is no longer needed.
+  1. `githubOwner.listForOwner({ per_page: 100 })`. Use `octokit.paginate` if total exceeds one page (F7).
   2. Filter: `!repo.fork && !repo.archived` (F8, D8).
   3. `Promise.all` per repo: `octokit.repos.listCommits({ owner, repo, sha: repo.default_branch, per_page: 1 })` (F9 parallelize, D8 default branch).
   4. Merge with `PROJECT_META`; repos not in meta → ghost cards.
@@ -210,12 +209,10 @@ bunx create-next-app@16 . --ts --tailwind --app --src-dir --import-alias "@/*"
   - **Does NOT write to disk** (C1: Vercel serverless FS is read-only).
   - Supports `?refresh=1` query (C2): sets `cache: 'no-store'` on the Octokit fetch, bypassing Next.js data cache.
 
-- **`public/data.json`** starts as a committed artifact with the seed `PROJECTS` data (msg/ts nulled, matching prototype's "sync pending" shape). **Kept fresh by GitHub Actions hourly cron** (user-confirmed):
-  - Workflow file: `.github/workflows/fetch-projects.yml`
-  - Schedule: `cron: '17 * * * *'` (hourly, offset from top-of-hour)
-  - Calls the same `fetchProjects()` via a `scripts/fetch-data.ts` runner (Node, not Next.js)
-  - Commits `public/data.json` to `main` only if changed (no-op commits avoided via `git diff --quiet`)
-  - Uses `secrets.GITHUB_TOKEN_DASHBOARD` (fine-grained PAT, Contents+Metadata read on `thensmt/*`)
+- **`public/data.json`** starts as a committed artifact with the seed `PROJECTS` data (msg/ts nulled, matching prototype's "sync pending" shape). Kept fresh by:
+  - **Option A (default):** Manual — user runs `bun run fetch-data` locally, commits the JSON.
+  - **Option B (optional):** GitHub Actions hourly workflow commits `data.json` if changed.
+  - User can choose later without changing app code.
 
 - **`page.tsx`** fetches from `/api/projects` (server-to-server). ISR `export const revalidate = 3600`.
 
@@ -360,18 +357,16 @@ Cover: GitHub token creation (fine-grained, `repo:read` on `thensmt/*`); `.env.l
 
 ---
 
-## Deferred decisions (resolved 2026-04-19)
+## Deferred decisions (require user sign-off before implementation)
 
-All six items answered by user. No outstanding blockers for implementation.
+These can't be unilaterally resolved by reviewers. In priority order:
 
-| # | Decision | User answer |
-|---|---|---|
-| 1 | `thensmt` account type | **User account** → `listForUser` |
-| 2 | Data-freshness contract | **Hourly ISR + manual Refresh button** |
-| 3 | `public/data.json` updates | **GitHub Actions hourly cron** (`.github/workflows/fetch-projects.yml`) |
-| 4 | Ghost-card persistence | **localStorage drafts + one-click export to `projects-overrides.json`** |
-| 5 | Token scope | **Fine-grained PAT, `thensmt/*` read-only** (Contents + Metadata) |
-| 6 | Hosting | **Vercel** |
+1. **`thensmt` account type** (D5/C4). Runtime detection is spec'd, but a one-line answer from the user saves an API call at startup. Is `thensmt` a GitHub User or a GitHub Organization?
+2. **Data-freshness contract** (D2). The plan says hourly ISR + manual Refresh button. User can amend to: (a) per-request live (no ISR), (b) shorter TTL (5 min), or (c) Actions cron writing `public/data.json` (removes runtime GitHub dep entirely). Confirm the hourly-ISR-plus-Refresh model is what's wanted.
+3. **`public/data.json` update mechanism** (C1). Manual (`bun run fetch-data` + commit) OR GitHub Actions cron? Affects whether we add the workflow file now or later.
+4. **Ghost-card cross-device persistence** (D6). v1 ships localStorage draft + one-click export-to-JSON. Confirm this matches the "never require a code change" requirement, or ask for durable server-side persistence (Vercel KV / Supabase — adds scope).
+5. **Token scope.** Classic PAT with `repo` scope, or fine-grained token with read-only on `thensmt/*`? Fine-grained is safer but one-per-repo config.
+6. **Hosting.** Vercel (default for Next.js) or Cloudflare Pages / self-hosted? Affects whether `public/data.json` fallback is enough (Vercel read-only FS) or we need a durable store.
 
 ---
 
@@ -382,4 +377,4 @@ All six items answered by user. No outstanding blockers for implementation.
 - **`CODEX_FINDINGS.md`** — Round 2 Codex adversarial review. Archived at `.review/CODEX_FINDINGS.md`.
 - **This `PLAN.md`** — Round 2 synthesis (current, the implementation spec).
 
-*Synthesis complete. 2026-04-19. Round 1 overcorrected on D1/D3/D6/D9/D11; Codex pushback correctly flagged these against the chat transcript (chat1.md:234, 400, 415). Round 1 correctly flagged the nine GitHub failure modes and the line-reference errors, which survive into this plan. All six deferred decisions resolved by user on 2026-04-19. Implementation is unblocked.*
+*Synthesis complete. 2026-04-19. Round 1 overcorrected on D1/D3/D6/D9/D11; Codex pushback correctly flagged these against the chat transcript (chat1.md:234, 400, 415). Round 1 correctly flagged the nine GitHub failure modes and the line-reference errors, which survive into this plan. Six decisions remain for the user.*

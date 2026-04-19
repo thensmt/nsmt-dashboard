@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NSMT Dashboard — PLAN.md Adversarial Review Report</title>
+<style>
+  @page {
+    size: Letter;
+    margin: 0.75in 0.9in 0.85in 0.9in;
+    @bottom-right { content: counter(page) " / " counter(pages); font-family: -apple-system, sans-serif; font-size: 9pt; color: #888; }
+    @bottom-left { content: "NSMT Dashboard · Adversarial Review · 2026-04-19"; font-family: -apple-system, sans-serif; font-size: 9pt; color: #888; }
+  }
+  @page:first { margin: 0; @bottom-right { content: none; } @bottom-left { content: none; } }
+  html { font-family: -apple-system, "Helvetica Neue", sans-serif; color: #111; line-height: 1.45; font-size: 10.5pt; }
+  body { margin: 0; }
+  h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.01em; color: #000; margin: 1.4em 0 0.4em; page-break-after: avoid; }
+  h1 { font-size: 22pt; }
+  h2 { font-size: 15pt; border-bottom: 2px solid #0E80FC; padding-bottom: 4px; margin-top: 1.8em; }
+  h3 { font-size: 12pt; color: #0E80FC; }
+  h4 { font-size: 11pt; color: #333; margin: 0.8em 0 0.2em; }
+  p { margin: 0.4em 0; }
+  code { font-family: "SF Mono", Menlo, monospace; font-size: 9pt; background: #f4f4f4; padding: 1px 4px; border-radius: 2px; }
+  pre { background: #f4f4f4; border: 1px solid #e0e0e0; border-radius: 3px; padding: 10px 12px; font-family: "SF Mono", Menlo, monospace; font-size: 8.5pt; line-height: 1.35; overflow: auto; page-break-inside: avoid; white-space: pre-wrap; word-break: break-word; }
+  table { border-collapse: collapse; width: 100%; margin: 0.6em 0; font-size: 9pt; page-break-inside: auto; }
+  th, td { border: 1px solid #d0d0d0; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f0f0f0; font-weight: 700; font-size: 9pt; }
+  tr { page-break-inside: avoid; }
+  ul, ol { margin: 0.4em 0 0.4em 1.4em; padding: 0; }
+  li { margin: 0.2em 0; }
+  blockquote { border-left: 3px solid #0E80FC; margin: 0.6em 0; padding: 0.3em 0.9em; background: #f8fbff; color: #333; }
+  .cover { height: 100vh; padding: 2in 1.2in 1in 1.2in; background: linear-gradient(180deg, #000 0%, #0a0a0a 60%, #0E80FC 180%); color: #fff; page-break-after: always; display: flex; flex-direction: column; justify-content: space-between; }
+  .cover h1 { color: #fff; font-size: 32pt; margin: 0 0 0.2em; letter-spacing: -0.02em; }
+  .cover .kicker { text-transform: uppercase; letter-spacing: 0.18em; font-size: 10pt; color: #0E80FC; font-weight: 700; margin-bottom: 3em; }
+  .cover .sub { color: #bbb; font-size: 12pt; max-width: 5.5in; line-height: 1.5; }
+  .cover .meta { margin-top: auto; color: #888; font-size: 9pt; line-height: 1.8; border-top: 1px solid #333; padding-top: 1em; }
+  .cover .meta strong { color: #fff; font-weight: 600; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 8.5pt; font-weight: 600; letter-spacing: 0.02em; }
+  .pill-high { background: #ffe8e8; color: #a80000; }
+  .pill-med { background: #fff4dc; color: #7a4a00; }
+  .pill-low { background: #e8f0ff; color: #002a80; }
+  .pill-kept { background: #e4f6e4; color: #1a5a1a; }
+  .pill-flipped { background: #ffe4f0; color: #8a0052; }
+  .pill-amended { background: #fff4dc; color: #7a4a00; }
+  .pill-new { background: #e8e8ff; color: #2a0080; }
+  .tl { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 1em 0; }
+  .tl .step { border: 1px solid #d0d0d0; border-radius: 4px; padding: 10px 12px; background: #fafafa; font-size: 9.5pt; page-break-inside: avoid; }
+  .tl .step .when { font-size: 8pt; text-transform: uppercase; letter-spacing: 0.14em; color: #0E80FC; font-weight: 700; }
+  .tl .step h4 { margin: 4px 0 6px; font-size: 10.5pt; }
+  .callout { border-left: 4px solid #0E80FC; background: #f5faff; padding: 10px 14px; margin: 0.8em 0; border-radius: 0 3px 3px 0; page-break-inside: avoid; }
+  .callout.warn { border-left-color: #d68600; background: #fff8ec; }
+  .callout.red { border-left-color: #a80000; background: #fff0f0; }
+  .callout h4 { margin: 0 0 4px; color: #000; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .finding { margin: 0.6em 0; padding: 8px 10px; border: 1px solid #e0e0e0; border-radius: 3px; page-break-inside: avoid; }
+  .finding-id { font-family: "SF Mono", Menlo, monospace; font-size: 9pt; color: #0E80FC; font-weight: 700; }
+  .diff-before { border-left: 3px solid #a80000; background: #fff0f0; padding: 6px 10px; font-size: 9.5pt; margin: 0.3em 0; }
+  .diff-after { border-left: 3px solid #1a5a1a; background: #f0fff0; padding: 6px 10px; font-size: 9.5pt; margin: 0.3em 0; }
+  .toc { margin: 1em 0 2em; }
+  .toc ol { list-style: decimal; margin-left: 1.4em; }
+  .toc li { margin: 0.3em 0; font-size: 10.5pt; }
+  .small { font-size: 9pt; color: #666; }
+  hr { border: none; border-top: 1px solid #d0d0d0; margin: 1.5em 0; }
+  .page-break { page-break-after: always; }
+</style>
+</head>
+<body>
+
+<!-- =================== COVER =================== -->
+<section class="cover">
+  <div>
+    <div class="kicker">Adversarial Review Report</div>
+    <h1>NSMT Dashboard<br>PLAN.md Review</h1>
+    <p class="sub">Three-pass adversarial review of the implementation plan. Claude round 1 → Codex round 2 → Claude synthesis. Captures every disagreement, what changed, what stood, and what remains for user sign-off.</p>
+  </div>
+  <div class="meta">
+    <strong>Repo</strong>&nbsp;·&nbsp;/Users/david/NSMT/nsmt-dashboard<br>
+    <strong>Reviewers</strong>&nbsp;·&nbsp;Claude Opus 4.7 (rounds 1 &amp; synthesis) · Codex (round 2)<br>
+    <strong>Generated</strong>&nbsp;·&nbsp;2026-04-19<br>
+    <strong>Scope</strong>&nbsp;·&nbsp;PLAN.md (210→412→380 lines across three passes)<br>
+    <strong>Outcome</strong>&nbsp;·&nbsp;Plan hardened. 12 Claude-round-1 findings + 13 Codex-round-2 findings. Six items deferred to user.
+  </div>
+</section>
+
+<!-- =================== TOC =================== -->
+<h1>Contents</h1>
+<div class="toc">
+<ol>
+  <li>Executive summary — TL;DR of what happened</li>
+  <li>Timeline of the three review passes</li>
+  <li>The six user decisions still pending</li>
+  <li>Round 1 — Claude adversarial (12 findings)</li>
+  <li>Round 2 — Codex adversarial (pushbacks + 13 new findings)</li>
+  <li>Synthesis decisions — every item's final verdict</li>
+  <li>What the final PLAN.md looks like (structural diff)</li>
+  <li>Artifacts and audit trail</li>
+</ol>
+</div>
+
+<div class="page-break"></div>
+
+<!-- =================== EXECUTIVE SUMMARY =================== -->
+<h1>1. Executive summary</h1>
+
+<p>The implementation plan for the NSMT dashboard was put through three adversarial review passes before any code gets written. The sequence was deliberately contentious: each reviewer was told to stress-test, not validate. Here's what happened.</p>
+
+<h3>TL;DR</h3>
+<div class="callout">
+<p><strong>Round 1 (Claude, adversarial) was partly right and partly over-aggressive.</strong> It correctly found nine GitHub-API failure modes the original plan ignored, corrected two line-reference errors, and added error/loading boundaries. But it also tried to overrule three direct user decisions (scaffold choice, data source, layout count) that Codex then rolled back using the design chat transcript as evidence. The final plan keeps Round 1's hardening but reverses Round 1's overcorrections — and adds 13 new items Round 1 missed.</p>
+</div>
+
+<h3>What changed in the plan</h3>
+<table>
+<thead><tr><th>Area</th><th>Before review</th><th>After review</th></tr></thead>
+<tbody>
+<tr><td>GitHub API failure handling</td><td>None</td><td>9 named failure modes (F1–F9) with explicit fallback behavior</td></tr>
+<tr><td>Fallback data path</td><td>—</td><td><code>public/data.json</code> committed artifact, read-only from route handler</td></tr>
+<tr><td>Force-refresh mechanism</td><td>"Reload the page" (which actually didn't bypass ISR)</td><td>Explicit Refresh button → <code>/api/projects?refresh=1</code></td></tr>
+<tr><td>Ghost-card persistence</td><td>"Add to local state" (undefined)</td><td>localStorage drafts + one-click export to <code>projects-overrides.json</code></td></tr>
+<tr><td><code>+ New Project</code> card</td><td>Toast-only (prototype behavior)</td><td>Opens setup form with <code>manual: true</code> (user's stated intent)</td></tr>
+<tr><td>Theme-script no-flash</td><td>Handwaved</td><td>Next.js Script <code>beforeInteractive</code> + <code>suppressHydrationWarning</code> + build-time test</td></tr>
+<tr><td>Priority-because storage</td><td>Per-ISO-week keying with eviction</td><td>Single key, shared across layouts</td></tr>
+<tr><td>Week/date display</td><td>Hardcoded "Week 16 · Apr 19, 2026"</td><td>Dynamic via <code>isoWeek.currentIsoWeekLabel()</code></td></tr>
+<tr><td>Owner detection</td><td>Hardcoded <code>listForOrg</code></td><td>Runtime account-type detection (<code>thensmt</code> may be User or Org)</td></tr>
+<tr><td>Motion control</td><td>Only <code>prefers-reduced-motion</code></td><td>Added "Quiet motion" app toggle for infinite loops</td></tr>
+<tr><td>Present mode persistence</td><td>Persisted (prototype copy)</td><td>Session-only (footgun prevention)</td></tr>
+<tr><td>Component count</td><td>16 (including duplicated A/B focus bands as separate, Barber pole as component)</td><td>16 (but with shared SetupForm for ghost + manual, and Barber pole as CSS-only)</td></tr>
+<tr><td>Layout variations</td><td>Both, with floating toggle</td><td>Both, with floating toggle (reverted after Round 1 tried to cut it)</td></tr>
+</tbody>
+</table>
+
+<h3>Why this report matters</h3>
+<p>Implementation has not started. The repo contains only <code>PLAN.md</code>, <code>README.md</code>, and <code>.git/</code>. This plan is what will be executed. Six decisions are flagged for your sign-off — they can't be safely made by a reviewer without your input. After you answer those, implementation is mechanical.</p>
+
+<div class="page-break"></div>
+
+<!-- =================== TIMELINE =================== -->
+<h1>2. Timeline</h1>
+
+<div class="tl">
+  <div class="step">
+    <div class="when">Step 1</div>
+    <h4>Original plan</h4>
+    <p>User's starting PLAN.md, 210 lines. Three architectural choices carried from prior conversation: standalone Next.js 16, live GitHub API, both layout variations with toggle. Included a "reviewer directive" explicitly requesting adversarial stress-testing.</p>
+  </div>
+  <div class="step">
+    <div class="when">Step 2</div>
+    <h4>Round 1 — Claude adversarial</h4>
+    <p>Read PLAN.md + design bundle + HTML prototype spot-checks. Produced 12 findings. Disagreed with all three of the user's architectural picks. Proposed static-site alternative. Rewrote PLAN.md to 412 lines with findings baked in.</p>
+  </div>
+  <div class="step">
+    <div class="when">Step 3</div>
+    <h4>Round 2 — Codex adversarial</h4>
+    <p>Read Round 1 rewrite + chat transcript (which Round 1 had skipped). Found chat evidence that contradicted Round 1's D3 pushback. Flagged 13 new issues Round 1 missed. Wrote <code>CODEX_FINDINGS.md</code>.</p>
+  </div>
+</div>
+
+<div class="tl">
+  <div class="step">
+    <div class="when">Step 4</div>
+    <h4>Round 2 — Claude synthesis</h4>
+    <p>Reconciled both passes. Accepted Codex's pushback on D1/D3/D5/D6/D9/D11. Kept Round 1's D2/D4/D8/D10/D12. Adopted all 13 Codex-new findings. Rewrote PLAN.md to 380 lines. Flagged six items for user decision.</p>
+  </div>
+  <div class="step">
+    <div class="when">Step 5</div>
+    <h4>This report</h4>
+    <p>PDF summary of everything above, with rationale for each decision so future you (or a collaborator) can see why the plan reads the way it does without replaying all three passes.</p>
+  </div>
+  <div class="step">
+    <div class="when">Step 6 (pending)</div>
+    <h4>User sign-off</h4>
+    <p>Six deferred decisions. After answers, scaffold can begin. See section 3.</p>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- =================== DEFERRED =================== -->
+<h1>3. What needs your decision before implementation</h1>
+
+<p>Six items. In priority order. None of these can be safely resolved by a reviewer — they're preference calls or facts only you know.</p>
+
+<table>
+<thead><tr><th style="width:4%">#</th><th style="width:22%">Decision</th><th>What's being asked</th><th style="width:20%">Default if you don't answer</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong><code>thensmt</code> account type</strong></td><td>Is <code>thensmt</code> a GitHub User account or a GitHub Organization? The Octokit method differs (<code>listForUser</code> vs <code>listForOrg</code>). Plan currently detects at runtime, but a one-line answer from you saves a startup API call.</td><td>Runtime detect via <code>GET /users/thensmt</code>, fall back to <code>listForUser</code> on failure.</td></tr>
+<tr><td>2</td><td><strong>Data freshness contract</strong></td><td>Current plan: hourly ISR cache + manual Refresh button. Alternatives: (a) per-request live with no cache (slower, uses rate limit more), (b) 5-minute TTL (compromise), (c) Actions cron writing <code>public/data.json</code> (no runtime GitHub dependency at all).</td><td>Hourly ISR + Refresh button.</td></tr>
+<tr><td>3</td><td><strong><code>public/data.json</code> update mechanism</strong></td><td>Manual (<code>bun run fetch-data</code> + commit) OR optional hourly GitHub Actions workflow? Affects whether we add <code>.github/workflows/fetch-projects.yml</code> now.</td><td>Manual script; add Actions workflow later if needed.</td></tr>
+<tr><td>4</td><td><strong>Ghost-card cross-device persistence</strong></td><td>v1 ships localStorage drafts + one-click export to <code>projects-overrides.json</code>. The export step is the "durable" part. Does that meet your "never require a code change" requirement, or do you want a real server-side store (Vercel KV / Supabase)?</td><td>localStorage drafts + export.</td></tr>
+<tr><td>5</td><td><strong>Token scope</strong></td><td>Classic PAT with <code>repo</code> scope, or fine-grained token scoped to <code>thensmt/*</code>? Fine-grained is safer but requires one-per-repo configuration.</td><td>Fine-grained.</td></tr>
+<tr><td>6</td><td><strong>Hosting</strong></td><td>Vercel is default for Next.js. Cloudflare Pages and self-host are also options. Affects whether <code>public/data.json</code> fallback suffices (Vercel FS is read-only) or whether a durable store is required.</td><td>Vercel.</td></tr>
+</tbody>
+</table>
+
+<div class="callout warn">
+<h4>Bonus context for decision #4</h4>
+<p>The design chat transcript (<code>chats/chat1.md:400</code>) says: <em>"This is critical — the dashboard should never require a code change when I start a new project."</em> Round 1's initial "localStorage only, single-device" spec failed this requirement; Round 2 synthesis spec'd the localStorage-plus-export path so the "no code change" promise is met by an export click rather than a full durable server. If you want true durable persistence (so a new repo configured on laptop is visible on iPad without exporting), say so and we'll add a persistence layer.</p>
+</div>
+
+<div class="page-break"></div>
+
+<!-- =================== ROUND 1 =================== -->
+<h1>4. Round 1 — Claude adversarial</h1>
+
+<p>Starting state: PLAN.md, 210 lines, three user-chosen architectural picks, detailed implementation steps, a verification section. Claude's job was to stress-test.</p>
+
+<h2>4.1 All 12 findings</h2>
+
+<table>
+<thead><tr><th style="width:5%">ID</th><th style="width:22%">Topic</th><th style="width:11%">Severity</th><th>Finding (short)</th><th style="width:20%">Round 1 recommendation</th></tr></thead>
+<tbody>
+<tr><td>D1</td><td>Scaffold: Next.js 16</td><td><span class="pill pill-high">HIGH</span></td><td>Over-engineered for one user, 6 cards, hourly refresh. Internal contradiction: "live on page load" vs <code>revalidate=3600</code>. Next 16 + React 19 + shadcn compat still settling.</td><td>Switch to Vite SPA + GitHub Actions cron writing <code>public/data.json</code>.</td></tr>
+<tr><td>D2</td><td>Live GitHub API</td><td><span class="pill pill-high">HIGH</span></td><td>Nine failure modes unhandled: rate limit, API down, token revoked, malformed response, renamed/archived repos, private-scope mismatch, pagination, forks, ISR-miss waterfall.</td><td>Decouple fetch from render via pre-fetched JSON, or isolate in route handler with last-known-good fallback.</td></tr>
+<tr><td>D3</td><td>Both layouts + toggle</td><td><span class="pill pill-med">MEDIUM</span></td><td>2× components, CSS, motion. Toggle is a design-tool artifact. Variation B already hidden on mobile.</td><td>Ship Variation A only.</td></tr>
+<tr><td>D4</td><td>Line refs drift</td><td><span class="pill pill-low">LOW</span></td><td>PROJECTS at 1153 not ~1140; <code>validateSetup</code> at 1472–1478 not 1472–1486.</td><td>Corrected.</td></tr>
+<tr><td>D5</td><td>GitHub owner question</td><td><span class="pill pill-low">LOW</span></td><td>Plan asks "personal vs org?" but bundle already shows <code>https://github.com/thensmt/…</code> for all 6 repos.</td><td>Removed question; confirmed <code>thensmt</code>.</td></tr>
+<tr><td>D6</td><td>Ghost-card save persistence</td><td><span class="pill pill-high">HIGH</span></td><td>Plan says "add to local state." Prototype persists nothing.</td><td>localStorage-only, single-device.</td></tr>
+<tr><td>D7</td><td>Priority-because ISO-week</td><td><span class="pill pill-low">LOW</span></td><td>Week calc unspec'd, rollover unspec'd, keys grow unbounded.</td><td>Spec'd ISO-8601 week key, Monday-blank reset, 8-week eviction.</td></tr>
+<tr><td>D8</td><td>Drift signal spec</td><td><span class="pill pill-med">MEDIUM</span></td><td>Silent on: repos with no commits, branch selection, bot force-pushes, archived repos.</td><td>Default branch only, ignore archived, separate "no commits" case.</td></tr>
+<tr><td>D9</td><td>Component-list scope creep</td><td><span class="pill pill-low">LOW</span></td><td>BarberPoleRail is CSS-only in prototype. shadcn dialog unused. NewProjectCard is toast-stubbed in prototype.</td><td>Barber pole stays CSS. Dropped dialog. NewProjectCard UI-only with toast.</td></tr>
+<tr><td>D10</td><td>No error boundary/Suspense/skeleton</td><td><span class="pill pill-med">MEDIUM</span></td><td>Live-fetch page with no loading or error state = blank on slow GitHub, crashed route on 500.</td><td>Added <code>error.tsx</code> and <code>loading.tsx</code>.</td></tr>
+<tr><td>D11</td><td>Tailwind + CSS-var tension</td><td><span class="pill pill-low">LOW</span></td><td>Plan lifts CSS vars verbatim but doesn't mention Tailwind color config.</td><td>Map every CSS token to Tailwind <code>theme.extend.colors</code>.</td></tr>
+<tr><td>D12</td><td>Verification requires unstageable conditions</td><td><span class="pill pill-low">LOW</span></td><td>"Add a repo not in projects.ts" and "find a repo with 60+ days stale" aren't reliably reproducible.</td><td>Added <code>__fixtures__/repos.json</code> fallback.</td></tr>
+</tbody>
+</table>
+
+<h2>4.2 What Round 1 got right</h2>
+<p>All of the following survived Round 2 scrutiny unchanged:</p>
+<ul>
+<li><strong>D2 F1–F9 failure modes.</strong> Original plan had zero error handling on a live-API page. The nine named cases are real — rate limits, token revocation, archived repos, forks polluting the grid, waterfall latency on ISR-miss, pagination. Codex confirmed these against the Octokit API and <code>chat1.md</code> references.</li>
+<li><strong>D4 line-reference corrections.</strong> Verified against the actual HTML file.</li>
+<li><strong>D8 drift-signal scoping.</strong> Confirmed against <code>chat1.md</code> help-popover intent (line 1138 of prototype).</li>
+<li><strong>D10 error + loading states.</strong> Standard practice for any route that fetches over the network; was missing.</li>
+<li><strong>D12 fixture fallback.</strong> Makes verification reproducible offline.</li>
+</ul>
+
+<h2>4.3 What Round 1 got wrong (and how Codex caught it)</h2>
+<p>Round 1 made a methodological error: it stress-tested the user's architectural decisions without reading the design chat transcript that contained the rationale. Codex read the transcript and found direct contradictions.</p>
+
+<div class="finding">
+<p><span class="finding-id">D3 overcorrection</span> — Round 1 recommended dropping Variation B. The chat transcript shows the opposite:</p>
+<blockquote><strong>chat1.md:234</strong> — <em>"I love the Editorial hero variation."</em></blockquote>
+<blockquote><strong>chat1.md:239–244</strong> — <em>"Now render both variations with these fixes applied: Variation 1: Broadcast bar... Variation 2: Editorial hero... Show them side by side or as a toggle. Everything else stays the same."</em></blockquote>
+<p>Round 1's D3 recommendation directly contradicted an explicit user ask. Reverted in synthesis.</p>
+</div>
+
+<div class="finding">
+<p><span class="finding-id">D6 under-spec</span> — Round 1's localStorage-only persistence was proposed as acceptable for "a one-user dashboard." But:</p>
+<blockquote><strong>chat1.md:400</strong> — <em>"This is critical — the dashboard should never require a code change when I start a new project."</em></blockquote>
+<p>Single-device-only fails "never requires a code change" when the user configures a new project on laptop and opens the dashboard on iPad. Synthesis added an export-to-JSON step so the promise holds.</p>
+</div>
+
+<div class="finding">
+<p><span class="finding-id">D9 under-spec</span> — Round 1 shipped <code>NewProjectCard</code> as toast-only, copying the prototype. But the prototype itself admits it's a demo:</p>
+<blockquote><strong>chat1.md:490</strong> — <em>"In this static demo it shows a toast; in production it'd open the same setup form pre-flagged as manual."</em></blockquote>
+<p>Shipping a demo behavior to production is exactly what the design hand-off warned against. Fixed in synthesis.</p>
+</div>
+
+<div class="finding">
+<p><span class="finding-id">D1 overreach</span> — Round 1 proposed switching the whole scaffold to Vite + Actions. The user's stated pick is Next.js 16. Without evidence that Next.js 16 was picked accidentally or that the user wants to change, overruling it adds risk and hides workflow complexity in YAML instead of TypeScript. Reverted in synthesis.</p>
+</div>
+
+<div class="page-break"></div>
+
+<!-- =================== ROUND 2 =================== -->
+<h1>5. Round 2 — Codex adversarial</h1>
+
+<p>Codex read the Round 1 rewrite, the original plan, the design bundle, and the chat transcript. Its job was to stress-test Round 1 — both its pushbacks and its additions.</p>
+
+<h2>5.1 What Codex agreed with (Round 1 findings that stand)</h2>
+<ul>
+<li><strong>D2 failure hardening.</strong> The F1–F9 table is correct and necessary. Kept.</li>
+<li><strong>D4 line corrections.</strong> Verified against prototype. Kept.</li>
+<li><strong>D8 drift scoping.</strong> Matches <code>chat1.md</code> help-popover text. Kept.</li>
+<li><strong>D9 (partial):</strong> dropping <code>shadcn/dialog</code> is correct — the chat explicitly asks for inline setup, not modal. Kept.</li>
+<li><strong>D10 error + loading.</strong> Kept.</li>
+</ul>
+
+<h2>5.2 Codex's pushback on Round 1 (reversed in synthesis)</h2>
+
+<div class="finding">
+<p><span class="finding-id">D1 — back off the static-site recommendation</span></p>
+<p class="small">User's pick: standalone Next.js 16. Round 1: switch to Vite SPA. Codex: keep Next.js as baseline; static is a documented alternative only.</p>
+<div class="diff-before"><strong>Round 1 default:</strong> "Vite SPA + GitHub Actions cron writing <code>public/data.json</code>, deploy to Cloudflare Pages."</div>
+<div class="diff-after"><strong>Synthesis default:</strong> "Keep standalone Next.js as baseline. Static + Actions remains a fallback if priority is lowest runtime surface area, but it adds a GitHub remote, scheduled workflow, generated artifact, and commit-flow decisions."</div>
+</div>
+
+<div class="finding">
+<p><span class="finding-id">D3 — reject the 'ship A only' recommendation</span></p>
+<p class="small">Chat transcript explicitly asks for both variations.</p>
+<div class="diff-before"><strong>Round 1:</strong> "Ship <code>FocusBandA</code> only. Delete <code>FocusBandB</code>, <code>VariationToggle</code>, and the second grid render."</div>
+<div class="diff-after"><strong>Synthesis:</strong> "Ship both focus bands on desktop with a persisted toggle. Mobile uses A only (matches prototype). Render one project grid; swap only the focus-band component."</div>
+</div>
+
+<div class="finding">
+<p><span class="finding-id">D5 — amend 'owner confirmed'</span></p>
+<p class="small">The prototype hardcodes URLs under <code>thensmt</code>, but that's just a slug. Whether <code>thensmt</code> is a User or an Organization determines which Octokit method to call.</p>
+<div class="diff-before"><strong>Round 1:</strong> hardcoded <code>octokit.repos.listForOrg({ org: 'thensmt' })</code>.</div>
+<div class="diff-after"><strong>Synthesis:</strong> runtime detection via <code>GET /users/thensmt</code>, branch to <code>listForOrg</code> or <code>listForUser</code>.</div>
+</div>
+
+<div class="finding">
+<p><span class="finding-id">D6 — amend localStorage-only</span></p>
+<div class="diff-before"><strong>Round 1:</strong> "localStorage only, single-device — acceptable for a one-user dashboard."</div>
+<div class="diff-after"><strong>Synthesis:</strong> "localStorage drafts + one-click export to <code>projects-overrides.json</code>. The export step is the 'no code change required' promise."</div>
+</div>
+
+<div class="finding">
+<p><span class="finding-id">D9 (second half) — reject UI-only NewProjectCard</span></p>
+<div class="diff-before"><strong>Round 1:</strong> "NewProjectCard ships as UI-only with a toast."</div>
+<div class="diff-after"><strong>Synthesis:</strong> "<code>NewProjectCard</code> opens the same inline setup form with <code>manual: true</code>; GitHub-derived fields are absent."</div>
+</div>
+
+<div class="finding">
+<p><span class="finding-id">D11 — amend Tailwind overmapping</span></p>
+<div class="diff-before"><strong>Round 1:</strong> "Every CSS token in the <code>:root</code> block gets a corresponding Tailwind color entry."</div>
+<div class="diff-after"><strong>Synthesis:</strong> "CSS variables remain primary. Tailwind arbitrary values (<code>bg-[var(--surface)]</code>) are the default. Map only 3–4 most-used semantic colors to named Tailwind tokens."</div>
+</div>
+
+<h2>5.3 Codex's 13 new findings (all adopted)</h2>
+
+<table>
+<thead><tr><th style="width:5%">ID</th><th style="width:26%">Finding</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>C1</td><td>Round 1's own <code>/api/projects</code> route writes <code>public/last-known-good.json</code> on success — Vercel serverless FS is <em>read-only</em>, so the proposal was architecturally broken.</td><td>Route handler <strong>reads</strong> <code>public/data.json</code> on failure but <strong>never writes</strong> it. The file is a committed artifact updated manually (or by optional Actions cron).</td></tr>
+<tr><td>C2</td><td>"Reload to force-refresh" is false under ISR + route cache.</td><td><code>/api/projects?refresh=1</code> bypasses the cache; Topbar gets a Refresh button.</td></tr>
+<tr><td>C3</td><td>No-flash theme script in Next 16 / React 19 needs <code>suppressHydrationWarning</code> and a concrete placement strategy; Round 1 handwaved.</td><td>Next.js <code>&lt;Script strategy="beforeInteractive"&gt;</code>, <code>suppressHydrationWarning</code> on <code>&lt;html&gt;</code>, build-time test checks for no hydration warnings in the production console.</td></tr>
+<tr><td>C4</td><td><code>thensmt</code> User/Org unverified (<code>gh api</code> could not reach GitHub from the sandbox).</td><td>Flagged as deferred decision #1.</td></tr>
+<tr><td>C5</td><td>If both layouts ship, each has its own editable priority-because element — leads to two conflicting notes.</td><td>Single <code>PriorityBecause</code> instance, shared key, rendered once and reparented across layouts.</td></tr>
+<tr><td>C6</td><td>"Week 16 · Apr 19, 2026" is hardcoded in two places in the prototype (topbar + present header).</td><td>Single <code>isoWeek.currentIsoWeekLabel()</code> function, two call sites.</td></tr>
+<tr><td>C7</td><td>Client-side override merging can flash ghost → configured on reload.</td><td>Accept the flash as a known limitation (&lt;50ms, only on newly-configured cards). Pre-hydration merge is too invasive.</td></tr>
+<tr><td>C8</td><td>Prototype's present-mode filter-dim CSS uses a stale selector (<code>.filter-bar</code>) that doesn't match the real DOM (<code>.filters</code>).</td><td>Port the intent (dim the filters), not the buggy selector.</td></tr>
+<tr><td>C9</td><td>Infinite loops (barber pole, active-pulse, ghost marching dashes) have no app-level control.</td><td>"Quiet motion" toggle in help popover adds <code>html.quiet-motion</code>. <code>prefers-reduced-motion</code> remains the hard stop.</td></tr>
+<tr><td>C10</td><td>Present-mode persistence was copied from prototype without questioning.</td><td>Session-only. Reload exits present mode. Prevents "I opened the laptop and my data is hidden" surprise.</td></tr>
+<tr><td>C11</td><td>Round 1 had <code>last-known-good.json</code> in two different paths in the same plan.</td><td>Unified to <code>public/data.json</code> everywhere.</td></tr>
+<tr><td>C12</td><td>Prototype's save-handler writes <code>repoUrl/liveUrl/commit.date</code>, but <code>cardHTML()</code> reads <code>github/live/commit.ts</code> — a real bug in the prototype.</td><td>Preserve visual behavior, not the broken JS data shape. Use the typed <code>Project</code> interface.</td></tr>
+<tr><td>P5</td><td>Round 1's ISO-week key with Monday-blank reset was an implementation decision, not design intent. Prototype stores per-variation, not per-week.</td><td>Simplified to one key, no week-based logic. User writes/edits whenever — the "Monday anchor" is a behavior, not a storage schema.</td></tr>
+</tbody>
+</table>
+
+<div class="page-break"></div>
+
+<!-- =================== SYNTHESIS TABLE =================== -->
+<h1>6. Synthesis — every finding's final verdict</h1>
+
+<p>One row per item. Pill shows final outcome.</p>
+
+<table>
+<thead><tr><th>ID</th><th>Topic</th><th style="width:12%">Status</th><th>Final decision</th></tr></thead>
+<tbody>
+<tr><td>D1</td><td>Scaffold</td><td><span class="pill pill-flipped">Flipped</span></td><td>Keep Next.js 16. Static is documented alternative.</td></tr>
+<tr><td>D2</td><td>GitHub failure handling</td><td><span class="pill pill-kept">Kept</span></td><td>F1–F9 explicit. Route handler reads <code>public/data.json</code> on failure, never writes.</td></tr>
+<tr><td>D3</td><td>Layout count</td><td><span class="pill pill-flipped">Flipped</span></td><td>Ship both desktop variations (chat transcript evidence). Mobile is A-only.</td></tr>
+<tr><td>D4</td><td>Line refs</td><td><span class="pill pill-kept">Kept</span></td><td>Corrected inline.</td></tr>
+<tr><td>D5</td><td>Owner</td><td><span class="pill pill-amended">Amended</span></td><td>Slug confirmed; runtime type detection.</td></tr>
+<tr><td>D6</td><td>Ghost-card persistence</td><td><span class="pill pill-amended">Amended</span></td><td>localStorage drafts + one-click export to JSON.</td></tr>
+<tr><td>D7</td><td>Priority-because storage</td><td><span class="pill pill-amended">Amended</span></td><td>Single key, no week logic. Monday anchor is behavior.</td></tr>
+<tr><td>D8</td><td>Drift signal</td><td><span class="pill pill-kept">Kept</span></td><td>Default branch, ignore archived, separate no-commits case.</td></tr>
+<tr><td>D9</td><td>Component scope</td><td><span class="pill pill-amended">Amended</span></td><td>Barber pole CSS-only. Dialog dropped. NewProjectCard opens setup form with <code>manual:true</code>.</td></tr>
+<tr><td>D10</td><td>Error boundary</td><td><span class="pill pill-kept">Kept</span></td><td><code>error.tsx</code> + <code>loading.tsx</code>.</td></tr>
+<tr><td>D11</td><td>Tailwind mapping</td><td><span class="pill pill-amended">Amended</span></td><td>CSS vars primary. Map only 3–4 high-use tokens.</td></tr>
+<tr><td>D12</td><td>Fixture data</td><td><span class="pill pill-kept">Kept</span></td><td><code>__fixtures__/repos.json</code> for offline verify.</td></tr>
+<tr><td>C1</td><td>Vercel read-only FS</td><td><span class="pill pill-new">New</span></td><td>Never write to disk at runtime. Committed <code>public/data.json</code>.</td></tr>
+<tr><td>C2</td><td>Force refresh</td><td><span class="pill pill-new">New</span></td><td><code>/api/projects?refresh=1</code> + Topbar button.</td></tr>
+<tr><td>C3</td><td>No-flash theme</td><td><span class="pill pill-new">New</span></td><td>Next.js Script <code>beforeInteractive</code> + <code>suppressHydrationWarning</code> + build test.</td></tr>
+<tr><td>C4</td><td>thensmt type</td><td><span class="pill pill-new">New</span></td><td>Runtime detection, deferred to user for early confirmation.</td></tr>
+<tr><td>C5</td><td>Priority shared state</td><td><span class="pill pill-new">New</span></td><td>Single instance, one key.</td></tr>
+<tr><td>C6</td><td>Week/date dynamic</td><td><span class="pill pill-new">New</span></td><td>One <code>isoWeek.currentIsoWeekLabel()</code>, two call sites.</td></tr>
+<tr><td>C7</td><td>Override flash</td><td><span class="pill pill-new">New</span></td><td>Accept &lt;50ms flash for v1. Documented.</td></tr>
+<tr><td>C8</td><td>Filter-dim selector</td><td><span class="pill pill-new">New</span></td><td>Target <code>.filters</code>, not prototype's stale <code>.filter-bar</code>.</td></tr>
+<tr><td>C9</td><td>Motion control</td><td><span class="pill pill-new">New</span></td><td>"Quiet motion" toggle in help popover.</td></tr>
+<tr><td>C10</td><td>Present mode persistence</td><td><span class="pill pill-new">New</span></td><td>Session-only. No persistence.</td></tr>
+<tr><td>C11</td><td>Last-known-good path</td><td><span class="pill pill-new">New</span></td><td>Unified to <code>public/data.json</code>.</td></tr>
+<tr><td>C12</td><td>Prototype field-name bug</td><td><span class="pill pill-new">New</span></td><td>Use typed <code>Project</code>; don't copy prototype JS.</td></tr>
+</tbody>
+</table>
+
+<div class="page-break"></div>
+
+<!-- =================== DIFF =================== -->
+<h1>7. What the final PLAN.md looks like</h1>
+
+<p>Structural diff. The PLAN.md on disk right now is the third version.</p>
+
+<div class="two-col">
+<div>
+<h3>Original (210 lines)</h3>
+<ul>
+<li>Reviewer directive</li>
+<li>Context</li>
+<li>Prerequisites</li>
+<li>Target location (1 component tree)</li>
+<li>Implementation steps 1–9</li>
+<li>Config needed from user</li>
+<li>Critical files table</li>
+<li>Verification (6 groups)</li>
+</ul>
+</div>
+<div>
+<h3>Synthesis (380 lines)</h3>
+<ul>
+<li><strong>What changed between rounds</strong> (new)</li>
+<li><strong>Synthesis table — every finding</strong> (new)</li>
+<li>Reviewer directive (unchanged)</li>
+<li>Context (trimmed, no more "personal vs org" question)</li>
+<li>Prerequisites</li>
+<li>Target location (updated component tree — <code>FocusBandA/B</code> both kept, <code>BarberPoleRail</code> removed, <code>overrides.ts</code>/<code>isoWeek.ts</code>/<code>githubOwner.ts</code>/<code>schema.ts</code> added)</li>
+<li>Implementation steps 1–9 (significantly expanded)</li>
+<li>Critical files table (line-refs corrected, "Week 16" literals called out, prototype field-name bug warning)</li>
+<li>Verification (<strong>8 groups</strong>, F1–F9 mapped to explicit checks)</li>
+<li><strong>Deferred decisions</strong> (new, 6 items for user)</li>
+<li><strong>Reviewer audit trail</strong> (new)</li>
+</ul>
+</div>
+</div>
+
+<h2>7.1 Key net-new files in the component tree</h2>
+
+<table>
+<thead><tr><th>File</th><th>Why it was added</th></tr></thead>
+<tbody>
+<tr><td><code>public/data.json</code></td><td>C1 — committed fallback for GitHub API failures. Replaces the broken runtime-write-back approach.</td></tr>
+<tr><td><code>src/app/api/projects/route.ts</code></td><td>D2 — isolates GitHub fetch from the page render. Implements F1–F9 gracefully. Supports <code>?refresh=1</code>.</td></tr>
+<tr><td><code>src/app/error.tsx</code>, <code>src/app/loading.tsx</code></td><td>D10 — route-level error boundary and loading skeleton.</td></tr>
+<tr><td><code>src/lib/githubOwner.ts</code></td><td>D5/C4 — runtime account-type detection (User vs Org).</td></tr>
+<tr><td><code>src/lib/overrides.ts</code></td><td>D6 — localStorage drafts + export-to-JSON for ghost-card persistence.</td></tr>
+<tr><td><code>src/lib/isoWeek.ts</code></td><td>C6 — dynamic week/date label for Topbar + Present header.</td></tr>
+<tr><td><code>src/lib/schema.ts</code></td><td>F4 — zod schemas for GitHub responses.</td></tr>
+</tbody>
+</table>
+
+<h2>7.2 Net-removed</h2>
+<ul>
+<li><code>BarberPoleRail.tsx</code> — D9, CSS-only in prototype</li>
+<li><code>shadcn/dialog</code> install — D9, nothing uses it</li>
+<li>"GitHub owner?" question in Config needed section — D5, answered in bundle</li>
+<li>ISO-week keying + eviction logic for priority-because — D7 simplified</li>
+</ul>
+
+<div class="page-break"></div>
+
+<!-- =================== ARTIFACTS =================== -->
+<h1>8. Artifacts and audit trail</h1>
+
+<p>Everything produced during the review is archived under <code>.review/</code> in the repo:</p>
+
+<table>
+<thead><tr><th>File</th><th>Lines</th><th>What it is</th></tr></thead>
+<tbody>
+<tr><td><code>.review/PLAN.original.md</code></td><td>210</td><td>Pre-review starting plan</td></tr>
+<tr><td><code>.review/PLAN.round1-claude.md</code></td><td>412</td><td>Claude's Round 1 adversarial rewrite</td></tr>
+<tr><td><code>.review/CODEX_PROMPT.md</code></td><td>85</td><td>Brief Claude wrote for Codex (10 stress-test targets + output format spec)</td></tr>
+<tr><td><code>.review/CODEX_FINDINGS.md</code></td><td>100</td><td>Codex's Round 2 adversarial review with proposed PLAN.md edits</td></tr>
+<tr><td><code>.review/PLAN.round2-synthesis.md</code></td><td>380</td><td>Claude's Round 2 synthesis (identical to live PLAN.md)</td></tr>
+<tr><td><code>PLAN.md</code></td><td>380</td><td>The live implementation plan (= synthesis)</td></tr>
+</tbody>
+</table>
+
+<h2>8.1 How to use this archive</h2>
+<ul>
+<li>To see what the <strong>starting point</strong> looked like: <code>cat .review/PLAN.original.md</code></li>
+<li>To see <strong>Claude Round 1's</strong> full pushback: <code>cat .review/PLAN.round1-claude.md</code></li>
+<li>To see <strong>Codex's response</strong> to Round 1: <code>cat .review/CODEX_FINDINGS.md</code></li>
+<li>To see the <strong>final plan</strong>: <code>cat PLAN.md</code></li>
+</ul>
+
+<h2>8.2 Why round 1 overcorrected, for future reference</h2>
+<div class="callout red">
+<h4>Methodological lesson</h4>
+<p>Claude's Round 1 stress-tested the plan against the design bundle's HTML prototype but <strong>did not read the chat transcript</strong> (<code>chats/chat1.md</code>). The transcript contained the user's explicit preferences for things like "I love the Editorial hero variation" and "the dashboard should never require a code change." Without that context, Round 1's adversarial stance looked like over-engineering the user's choices into simpler technology. Codex read the transcript and rolled back three of Round 1's recommendations.</p>
+<p>For future adversarial reviews: the <strong>rationale lives in chat transcripts, not in HTML exports</strong>. A reviewer who skips the transcript will miss why choices were made and will be tempted to "correct" them.</p>
+</div>
+
+<h2>8.3 Next step</h2>
+<p>Answer the six deferred decisions in section 3. After that, implementation is mechanical — the plan's step-by-step is now specific enough that a coding agent can execute it without further judgment calls.</p>
+
+<hr>
+
+<p class="small" style="text-align: center; color: #888;">NSMT Dashboard · Adversarial Review Report · Generated 2026-04-19 · Claude Opus 4.7 (1M context) + Codex</p>
+
+</body>
+</html>
