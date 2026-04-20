@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#0e80fc"/>
+  <text x="32" y="32"
+        text-anchor="middle"
+        dominant-baseline="central"
+        font-family="Rubik, 'Helvetica Neue', Arial, sans-serif"
+        font-weight="900"
+        font-size="22"
+        letter-spacing="-0.5"
+        fill="#ffffff">NSMT</text>
+</svg>
