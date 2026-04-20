@@ -20,6 +20,9 @@ interface Props {
   refreshing: boolean;
   present: boolean;
   onTogglePresent: () => void;
+  userInitial: string;
+  userName: string | null;
+  onSignOut: () => Promise<void>;
 }
 
 export function Topbar({
@@ -31,10 +34,14 @@ export function Topbar({
   refreshing,
   present,
   onTogglePresent,
+  userInitial,
+  userName,
+  onSignOut,
 }: Props) {
   const [dark, setDark] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [liveLabel, setLiveLabel] = useState(isoWeekLabel);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     setDark(document.documentElement.classList.contains("dark"));
@@ -160,7 +167,28 @@ export function Topbar({
         >
           {dark ? <SunIcon /> : <MoonIcon />}
         </button>
-        <div className="avatar">D</div>
+        <div className="avatar-wrap">
+          <button
+            type="button"
+            className="avatar"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            title={userName ?? "Account"}
+          >
+            {userInitial}
+          </button>
+          {menuOpen && (
+            <div className="avatar-menu" role="menu">
+              {userName ? <div className="avatar-menu-name">{userName}</div> : null}
+              <form action={onSignOut}>
+                <button type="submit" className="avatar-menu-item" role="menuitem">
+                  Sign out
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

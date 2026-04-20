@@ -22,6 +22,9 @@ import { HelpPopover } from "./HelpPopover";
 
 interface Props {
   initial: ProjectsPayload;
+  userInitial: string;
+  userName: string | null;
+  onSignOut: () => Promise<void>;
 }
 
 type GhostState = Record<string, "ghost" | "setup" | "skipped">;
@@ -29,7 +32,7 @@ type GhostState = Record<string, "ghost" | "setup" | "skipped">;
 const FILTERS = ["all", "Broadcast", "Marketplace", "Tooling", "Event", "Paused"] as const;
 type Filter = (typeof FILTERS)[number];
 
-export function Shell({ initial }: Props) {
+export function Shell({ initial, userInitial, userName, onSignOut }: Props) {
   const [payload, setPayload] = useState<ProjectsPayload>(initial);
   const [drafts, setDrafts] = useState<Record<string, ProjectOverride>>({});
   const [filter, setFilter] = useState<Filter>("all");
@@ -163,6 +166,9 @@ export function Shell({ initial }: Props) {
         onToggleHelp={() => setHelpOpen((v) => !v)}
         present={present}
         onTogglePresent={() => setPresent((v) => !v)}
+        userInitial={userInitial}
+        userName={userName}
+        onSignOut={onSignOut}
       />
 
       {payload.stale && (
