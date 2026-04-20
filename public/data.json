@@ -1,36 +1,6 @@
 {
-  "fetchedAt": "2026-04-19T00:00:00.000Z",
+  "fetchedAt": "2026-04-20T00:00:23.676Z",
   "projects": [
-    {
-      "id": "nsmt-livestream",
-      "name": "nsmt-livestream",
-      "type": "Broadcast",
-      "status": "Active",
-      "desc": "Live broadcast overlay and producer UI for NSMT basketball and football streams.",
-      "next": "Wire halftime card overlay to producer controls.",
-      "stack": ["Python", "WebSockets", "Capacitor", "iOS", "Android", "OBS"],
-      "commit": { "sha": "—", "msg": null, "ts": null },
-      "github": "https://github.com/thensmt/nsmt-livestream",
-      "live": "http://localhost:8000/nsmt-producer.html",
-      "path": "~/Downloads/Claude/NSMT/nsmt-livestream",
-      "drift": false,
-      "noCommits": true
-    },
-    {
-      "id": "nsmt-fastbreak",
-      "name": "nsmt-fastbreak",
-      "type": "Tooling",
-      "status": "In Progress",
-      "desc": "iPad-first stat tracking PWA. Exports LegitGM-style PDF box scores.",
-      "next": "Build event-logging UI for 12 operator buttons.",
-      "stack": ["Node", "Express 5", "WS", "OBS-websocket"],
-      "commit": { "sha": "—", "msg": null, "ts": null },
-      "github": "https://github.com/thensmt/nsmt-fastbreak",
-      "live": null,
-      "path": "~/Downloads/Claude/NSMT/nsmt-fastbreak",
-      "drift": false,
-      "noCommits": true
-    },
     {
       "id": "bitburg",
       "name": "bitburg",
@@ -38,13 +8,25 @@
       "status": "In Progress",
       "desc": "Two-sided marketplace for DMV photographers, videographers, editors. Tiered vetting.",
       "next": "Finish creator onboarding flow.",
-      "stack": ["Next.js 16", "React 19", "Prisma", "Clerk", "Stripe", "Supabase", "Tailwind"],
-      "commit": { "sha": "—", "msg": null, "ts": null },
+      "stack": [
+        "Next.js 16",
+        "React 19",
+        "Prisma",
+        "Clerk",
+        "Stripe",
+        "Supabase",
+        "Tailwind"
+      ],
+      "commit": {
+        "sha": "5278c15",
+        "msg": "feat: Job-post form with three palette variants (v0-generated) (#6)",
+        "ts": "5 days ago"
+      },
       "github": "https://github.com/thensmt/bitburg",
       "live": "http://localhost:3000",
       "path": "~/Downloads/Claude/NSMT/bitburg",
       "drift": false,
-      "noCommits": true
+      "noCommits": false
     },
     {
       "id": "little-rock",
@@ -53,13 +35,24 @@
       "status": "Paused",
       "desc": "Internal utility, parked while Hoopfest and livestream work take priority.",
       "next": "Revisit scope in Q3.",
-      "stack": ["React", "Vite", "Firebase", "AWS Lambda", "DynamoDB", "Stripe"],
-      "commit": { "sha": "—", "msg": null, "ts": null },
+      "stack": [
+        "React",
+        "Vite",
+        "Firebase",
+        "AWS Lambda",
+        "DynamoDB",
+        "Stripe"
+      ],
+      "commit": {
+        "sha": "9a62e3a",
+        "msg": "Update deploy script with real AWS resource IDs",
+        "ts": "1 month ago"
+      },
       "github": "https://github.com/thensmt/little-rock",
       "live": null,
       "path": "~/Downloads/Claude/NSMT/little-rock",
       "drift": false,
-      "noCommits": true
+      "noCommits": false
     },
     {
       "id": "nsmt-content-pipeline",
@@ -68,13 +61,72 @@
       "status": "Active",
       "desc": "Automates social content packaging: YouTube, Instagram, X threads from game footage.",
       "next": "Add X thread generator.",
-      "stack": ["Python", "Claude API", "Contentful", "GitHub Actions"],
-      "commit": { "sha": "—", "msg": null, "ts": null },
+      "stack": [
+        "Python",
+        "Claude API",
+        "Contentful",
+        "GitHub Actions"
+      ],
+      "commit": {
+        "sha": "c42f0dc",
+        "msg": "Initial commit — NSMT content pipeline",
+        "ts": "1 month ago"
+      },
       "github": "https://github.com/thensmt/nsmt-content-pipeline",
       "live": null,
       "path": "~/Downloads/Claude/NSMT/nsmt-content-pipeline",
       "drift": false,
-      "noCommits": true
+      "noCommits": false
+    },
+    {
+      "id": "nsmt-fastbreak",
+      "name": "nsmt-fastbreak",
+      "type": "Tooling",
+      "status": "In Progress",
+      "desc": "iPad-first stat tracking PWA. Exports LegitGM-style PDF box scores.",
+      "next": "Build event-logging UI for 12 operator buttons.",
+      "stack": [
+        "Node",
+        "Express 5",
+        "WS",
+        "OBS-websocket"
+      ],
+      "commit": {
+        "sha": "cab27da",
+        "msg": "Golden system: standalone overlay + control hub for team operation",
+        "ts": "18 days ago"
+      },
+      "github": "https://github.com/thensmt/nsmt-fastbreak",
+      "live": null,
+      "path": "~/Downloads/Claude/NSMT/nsmt-fastbreak",
+      "drift": false,
+      "noCommits": false
+    },
+    {
+      "id": "nsmt-livestream",
+      "name": "nsmt-livestream",
+      "type": "Broadcast",
+      "status": "Active",
+      "desc": "Live broadcast overlay and producer UI for NSMT basketball and football streams.",
+      "next": "Wire halftime card overlay to producer controls.",
+      "stack": [
+        "Python",
+        "WebSockets",
+        "Capacitor",
+        "iOS",
+        "Android",
+        "OBS"
+      ],
+      "commit": {
+        "sha": "bbd4023",
+        "msg": "Remove old tickets/ directory — superseded by Project Little Rock",
+        "ts": "21 days ago"
+      },
+      "github": "https://github.com/thensmt/nsmt-livestream",
+      "live": "http://localhost:8000/nsmt-producer.html",
+      "path": "~/Downloads/Claude/NSMT/nsmt-livestream",
+      "drift": false,
+      "noCommits": false
     },
     {
       "id": "scorebug",
@@ -84,15 +136,50 @@
       "status": "Shipped",
       "desc": "Live scorebug overlay in production for every NSMT broadcast. Firebase-connected.",
       "next": "Ship v3 with new brand system.",
-      "stack": ["Firebase", "Node 20", "HTML/JS", "WebSockets"],
-      "commit": { "sha": "—", "msg": null, "ts": null },
+      "stack": [
+        "Firebase",
+        "Node 20",
+        "HTML/JS",
+        "WebSockets"
+      ],
+      "commit": {
+        "sha": "5d2bdbb",
+        "msg": "Add web-based Create Event page with copy-able URLs",
+        "ts": "13 days ago"
+      },
       "github": "https://github.com/thensmt/scorebug",
       "live": "https://scorebug.thensmt.com",
       "path": "~/Downloads/Claude/NSMT/scorebug",
       "drift": false,
-      "noCommits": true
+      "noCommits": false
     }
   ],
-  "ghosts": [],
+  "ghosts": [
+    {
+      "id": "nsmt-docs",
+      "name": "nsmt-docs",
+      "github": "https://github.com/thensmt/nsmt-docs"
+    },
+    {
+      "id": "nsmt-wiki",
+      "name": "nsmt-wiki",
+      "github": "https://github.com/thensmt/nsmt-wiki"
+    },
+    {
+      "id": "project-fortress",
+      "name": "project-fortress",
+      "github": "https://github.com/thensmt/project-fortress"
+    },
+    {
+      "id": "project-gaylorGPT",
+      "name": "project-gaylorGPT",
+      "github": "https://github.com/thensmt/project-gaylorGPT"
+    },
+    {
+      "id": "v0-sports-scorebug-overlay",
+      "name": "v0-sports-scorebug-overlay",
+      "github": "https://github.com/thensmt/v0-sports-scorebug-overlay"
+    }
+  ],
   "errors": []
 }
