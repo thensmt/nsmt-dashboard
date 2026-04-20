@@ -18,17 +18,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: "20"
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci --prefer-offline --no-audit
+        run: bun install --frozen-lockfile
 
       - name: Fetch projects
         env:
           GITHUB_TOKEN: ${{ secrets.DASHBOARD_PAT }}
-        run: npm run fetch-data
+        run: bun run fetch-data
 
       - name: Commit if changed
         run: |
