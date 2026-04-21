@@ -12,6 +12,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   pages: { signIn: "/login", error: "/login" },
+  logger: {
+    error(error) {
+      console.error("[auth][error]", error);
+      const cause = (error as { cause?: unknown }).cause;
+      if (cause) console.error("[auth][cause]", cause);
+    },
+  },
   callbacks: {
     async signIn({ profile }) {
       const email = profile?.email;
