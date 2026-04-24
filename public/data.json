@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-04-24T12:08:11.871Z",
+  "fetchedAt": "2026-04-24T14:10:00.577Z",
   "projects": [
     {
       "id": "bitburg",
@@ -127,31 +127,6 @@
       "path": "~/Downloads/Claude/NSMT/nsmt-livestream",
       "drift": false,
       "noCommits": false
-    },
-    {
-      "id": "scorebug",
-      "name": "Project Austin",
-      "subname": "scorebug",
-      "type": "Broadcast",
-      "status": "Shipped",
-      "desc": "Live scorebug overlay in production for every NSMT broadcast. Firebase-connected.",
-      "next": "Ship v3 with new brand system.",
-      "stack": [
-        "Firebase",
-        "Node 20",
-        "HTML/JS",
-        "WebSockets"
-      ],
-      "commit": {
-        "sha": "5d2bdbb",
-        "msg": "Add web-based Create Event page with copy-able URLs",
-        "ts": "17 days ago"
-      },
-      "github": "https://github.com/thensmt/scorebug",
-      "live": "https://scorebug.thensmt.com",
-      "path": "~/Downloads/Claude/NSMT/scorebug",
-      "drift": false,
-      "noCommits": false
     }
   ],
   "ghosts": [
@@ -169,6 +144,11 @@
       "id": "nsmt-wiki",
       "name": "nsmt-wiki",
       "github": "https://github.com/thensmt/nsmt-wiki"
+    },
+    {
+      "id": "project-austin",
+      "name": "project-austin",
+      "github": "https://github.com/thensmt/project-austin"
     },
     {
       "id": "project-fortress",
