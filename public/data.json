@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-04-25T03:34:00.024Z",
+  "fetchedAt": "2026-04-25T06:00:12.512Z",
   "projects": [
     {
       "id": "bitburg",
@@ -20,7 +20,7 @@
       "commit": {
         "sha": "5278c15",
         "msg": "feat: Job-post form with three palette variants (v0-generated) (#6)",
-        "ts": "10 days ago"
+        "ts": "11 days ago"
       },
       "github": "https://github.com/thensmt/bitburg",
       "live": "http://localhost:3000",
