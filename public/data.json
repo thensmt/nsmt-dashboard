@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-04-26T23:57:54.671Z",
+  "fetchedAt": "2026-04-27T04:02:01.132Z",
   "projects": [
     {
       "id": "bitburg",
@@ -94,7 +94,7 @@
       "commit": {
         "sha": "cab27da",
         "msg": "Golden system: standalone overlay + control hub for team operation",
-        "ts": "25 days ago"
+        "ts": "26 days ago"
       },
       "github": "https://github.com/thensmt/nsmt-fastbreak",
       "live": null,
@@ -120,7 +120,7 @@
       "commit": {
         "sha": "bbd4023",
         "msg": "Remove old tickets/ directory — superseded by Project Little Rock",
-        "ts": "28 days ago"
+        "ts": "29 days ago"
       },
       "github": "https://github.com/thensmt/nsmt-livestream",
       "live": "http://localhost:8000/nsmt-producer.html",
